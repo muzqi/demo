@@ -1,0 +1,22 @@
+version: "3.2" # 指定 docker-compose.yml 文件的写法格式
+services: # 多个容器的集合
+  koa-server-1: # 生成镜像以 {rootfilename}_test-1 命名
+    container_name: my-container
+    build:
+      context: ./koa-server-1
+      dockerfile: Dockerfile
+      args:
+        nodeVersion: "10.15.0"
+    command: node index.js
+    ports:
+      - 3050:3000 # 端口映射 {宿主机端口}:{容器暴露的端口}
+    environment:
+      - NODE_ENV=development # 环境变量，通过 process.env.NODE_ENV 访问
+    env_file:
+      - ./koa-server-1/.env # 指定环境变量的文件
+  koa-server-2:
+    build: ./koa-server-2
+    expose:
+      - "3000"
+    ports:
+      - 3060:3000
